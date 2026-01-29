@@ -1,0 +1,41 @@
+CREATE DATABASE student_database;
+USE student_database;
+
+
+CREATE TABLE students11 (
+    student_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    dob DATE
+);
+
+
+CREATE TABLE courses1 (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(50) NOT NULL,
+    credits INT
+);
+
+
+CREATE TABLE enrollments11 (
+    enrollment_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_id INT,
+    course_id INT,
+    grade CHAR(2),
+    FOREIGN KEY (student_id) REFERENCES students11(student_id),
+    FOREIGN KEY (course_id) REFERENCES courses1(course_id)
+);
+
+
+CREATE VIEW student_grades AS
+SELECT s.student_id, s.name, c.course_name, e.grade
+FROM students11 s
+JOIN enrollments11 e ON s.student_id = e.student_id
+JOIN courses1 c ON e.course_id = c.course_id;
+
+
+ 
+CREATE PROCEDURE assign_grade(IN sid INT, IN cid INT, IN grd CHAR(2))
+    UPDATE enrollments11
+    SET grade = grd
+    WHERE student_id = sid AND course_id = cid;
+
